@@ -46,4 +46,27 @@ data class User(
 
     }
 
+    data class Builder(
+        var b_id: String="",
+        var b_firstName: String?=null,
+        var b_lastName: String?=null,
+        var b_avatar: String?=null,
+        var b_rating: Int = 0,
+        var b_respect: Int = 0,
+        var b_lastVisit: Date? = null,
+        var b_isOnline: Boolean = false
+    ){
+        fun id(id: String)=apply { this.b_id = id}
+        fun firstName(firstName: String?) = apply { this.b_firstName =firstName}
+        fun lastName(lastName: String?)=apply { this.b_lastName = lastName}
+        fun avatar(avatar: String?)=apply { this.b_avatar = avatar}
+        fun rating(rating: Int)=apply { this.b_rating =rating}
+        fun respect(respect: Int)=apply { this.b_respect =respect}
+        fun lastVisit(lastVisit: Date?)=apply { this.b_lastVisit =lastVisit}
+        fun isOnline(isOnline: Boolean)=apply { this.b_isOnline =isOnline}
+        fun build() = User(b_id,b_firstName,b_lastName,b_avatar,b_rating,b_respect,b_lastVisit,b_isOnline)
+    }
+
+
+
 }
