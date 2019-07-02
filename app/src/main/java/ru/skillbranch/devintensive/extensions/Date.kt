@@ -3,7 +3,6 @@ package ru.skillbranch.devintensive.extensions
 import ru.skillbranch.devintensive.utils.Utils
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.abs
 
 const val SECOND = 1000
 const val MINUTE = 60 * SECOND
@@ -16,21 +15,21 @@ fun Date.format(pattern: String = "HH:mm:ss dd.MM.yy"): String {
 }
 
 
-fun Date.add(value: Int, units: TimeUnit): Date {
+fun Date.add(value: Int, units: TimeUnits): Date {
     var time = this.time
 
     time += when (units) {
-        TimeUnit.SECOND -> value * SECOND
-        TimeUnit.MINUTE -> value * MINUTE
-        TimeUnit.HOUR -> value * HOUR
-        TimeUnit.DAY -> value * DAY
+        TimeUnits.SECOND -> value * SECOND
+        TimeUnits.MINUTE -> value * MINUTE
+        TimeUnits.HOUR -> value * HOUR
+        TimeUnits.DAY -> value * DAY
     }
     this.time = time
     return this
 }
 
 
-enum class TimeUnit {
+enum class TimeUnits {
     SECOND,
     MINUTE,
     HOUR,
