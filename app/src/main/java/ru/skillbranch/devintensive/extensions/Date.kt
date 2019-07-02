@@ -46,7 +46,7 @@ fun Date.humanizeDiff(date: Date = Date()): String {
         in (0..1) -> return "только что"
         in (1..45) -> return "несколько секунд назад"
         in (75..45 * MINUTE) -> return "${t / MINUTE} ${Utils.days_to_string(
-            t / MINUTE,
+            t / MINUTE, ls -
             "минуту",
             "минуты",
             "минут"
@@ -59,7 +59,7 @@ fun Date.humanizeDiff(date: Date = Date()): String {
             "часов"
         )} назад "
         in (22 * HOUR..26 * HOUR) -> return "день назад"
-        in (26 * HOUR..360 * DAY) -> return "${t / DAY} ${Utils.days_to_string(t / DAY, "день", "дня", "дней")} назад"
+        in (26 * HOUR..360.toLong() * DAY) -> return "${t / DAY} ${Utils.days_to_string(t / DAY, "день", "дня", "дней")} назад"
         else -> return "более года"
     }
 }
