@@ -42,23 +42,23 @@ fun Date.humanizeDiff(date: Date = Date()): String {
     val t = thisTime - anotherTime
    // println("$thisTime , $anotherTime, $t")
     when (t) {
-        in (0..1) -> return "только что"
-        in (1..45) -> return "несколько секунд назад"
-        in (75..45 * MINUTE) -> return "${t / MINUTE} ${Utils.days_to_string(
+        in (0L* SECOND..1L*SECOND) -> return "только что"
+        in (1L*SECOND..45L*SECOND) -> return "несколько секунд назад"
+        in (75L*SECOND..45L * MINUTE) -> return "${t / MINUTE} ${Utils.days_to_string(
             t / MINUTE,
             "минуту",
             "минуты",
             "минут"
         )} назад"
-        in (45 * MINUTE..75 * MINUTE) -> return "час назад"
-        in (75 * MINUTE..22 * HOUR) -> return "${t / HOUR} ${Utils.days_to_string(
+        in (45L * MINUTE..75L * MINUTE) -> return "час назад"
+        in (75L * MINUTE..22L * HOUR) -> return "${t / HOUR} ${Utils.days_to_string(
             t / HOUR,
             "час",
             "часа",
             "часов"
         )} назад "
-        in (22 * HOUR..26 * HOUR) -> return "день назад"
-        in (26 * HOUR..360.toLong() * DAY) -> return "${t / DAY} ${Utils.days_to_string(t / DAY, "день", "дня", "дней")} назад"
+        in (22L * HOUR..26L * HOUR) -> return "день назад"
+        in (26L * HOUR..360L * DAY) -> return "${t / DAY} ${Utils.days_to_string(t / DAY, "день", "дня", "дней")} назад"
         else -> return "более года"
     }
 }

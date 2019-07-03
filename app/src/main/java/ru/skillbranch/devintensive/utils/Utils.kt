@@ -51,37 +51,61 @@ object Utils {
         )
 
         val (fName, lName) = parseFullName(payload)
-        var fOutName: String = ""
-        var lOutName: String = ""
+        var fOutName = ""
+        var lOutName = ""
+        var st=""
+        //println(fName)
+        //println(lName)
         if (fName != null)
             for (each in fName) {
-                //if (each.isLowerCase())
-                fOutName += litMap.getOrElse(each.toLowerCase().toString(),{each.toString()})
-                /*else
-                    fOutName+=litMap.get(each.toLowerCase().toString())?.toUpperCase()*/
+                if (each.isLowerCase())
+                    fOutName += litMap.getOrElse(each.toLowerCase().toString(), { each.toString() })
+                else {
+                    st = litMap.getOrElse(each.toLowerCase().toString(), { each.toString() })
+                    if (each.toString().length == st.length)
+                        fOutName += st.toUpperCase()
+                    else
+                        fOutName += st.replaceRange(0, 1, st[0].toString().toUpperCase())
+                }
             }
         if (lName != null)
             for (each in lName) {
-                //if (each.isLowerCase())
-                lOutName += litMap.getOrElse(each.toLowerCase().toString(),{each.toString()})
-                /*else
-                    lOutName+=litMap.get(each.toLowerCase().toString())?.toUpperCase()*/
+                if (each.isLowerCase())
+                    lOutName += litMap.getOrElse(each.toLowerCase().toString(), { each.toString() })
+                else {
+                    st = litMap.getOrElse(each.toLowerCase().toString(), { each.toString() })
+                    if (each.toString().length == st.length)
+                        lOutName += st.toUpperCase()
+                    else
+                        lOutName += st.replaceRange(0, 1, st[0].toString().toUpperCase())
+                    //lOutName += litMap.getOrElse(each.toLowerCase().toString(), { each.toString() }).toUpperCase()
+                }
             }
-        fOutName = fOutName.replaceRange(0, 1, fOutName[0].toString().toUpperCase())
-        lOutName = lOutName.replaceRange(0, 1, lOutName[0].toString().toUpperCase())
-        return fOutName + divider + lOutName
+        //println("f_out = $fOutName")
+        //println("l_out = $lOutName")
+        /*if (!fOutName.isNullOrEmpty())
+            fOutName = fOutName.replaceRange(0, 1, fOutName[0].toString().toUpperCase())
+        else
+            fOutName=""
+        if (!lOutName.isNullOrEmpty())
+            lOutName = lOutName.replaceRange(0, 1, lOutName[0].toString().toUpperCase())
+        else
+            lOutName=""*/
+        return (fOutName + divider + lOutName).trim()
     }
+
 
     fun toInitials(firstName: String?, lastName: String?): String? {
         val f = firstName?.trim()?.getOrNull(0)
         val s = lastName?.trim()?.getOrNull(0)
 
-        if (f == null) return null
-        else
-            if (s != null)
-                return "${f.toUpperCase()}${s.toUpperCase()}"
-            else
-                return "${f.toUpperCase()}"
+        when {
+            //((f == null)&&(s==null)) -> return null
+            ((f != null) && (s != null)) -> return "${f.toUpperCase()}${s.toUpperCase()}"
+            ((f != null) && (s == null)) -> return "${f.toUpperCase()}"
+            ((f == null) && (s != null)) -> return "${s.toUpperCase()}"
+            else -> return null
+        }
     }
 
     fun days_to_string(l: Long, s: String, s1: String, s2: String): Any {
