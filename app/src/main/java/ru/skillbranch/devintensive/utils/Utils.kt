@@ -50,7 +50,16 @@ object Utils {
             "я" to "ya"
         )
 
-        val (fName, lName) = parseFullName(payload)
+        //val (, lName) = parseFullName(payload)
+
+        val parts: List<String>? = payload?.trim()?.split(" ")
+
+        val fName = parts?.getOrNull(0)
+        var lName=""
+        if (parts?.count()?:0>1)
+            for (i in 1..parts?.count()!!-1)
+                lName+= parts?.getOrNull(i)+" "
+        lName=lName.trim()
         var fOutName = ""
         var lOutName = ""
         var st=""
