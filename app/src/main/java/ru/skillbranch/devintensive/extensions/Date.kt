@@ -67,9 +67,9 @@ fun Date.humanizeDiff(date: Date = Date()): String {
         else -> return "более года назад"
     }
     else
-        when (t.absoluteValue) {
-            in (0L * SECOND..1L * SECOND) -> return "только что"
-            in (1L * SECOND..45L * SECOND) -> return "через несколько секунд"
+        when (t.absoluteValue) { /*1L * SECOND) -> return "только что"
+            in (1L * SECOND..*/
+            in (0L * SECOND..45L * SECOND) -> return "через несколько секунд"
             in (75L * SECOND..45L * MINUTE) -> return "через ${t.absoluteValue / MINUTE} ${Utils.days_to_string(
                 t.absoluteValue / MINUTE,
                 "минуту",
@@ -87,7 +87,7 @@ fun Date.humanizeDiff(date: Date = Date()): String {
             in (26L * HOUR..360L * DAY) -> {
                 return "через ${t.absoluteValue / DAY} ${Utils.days_to_string(t.absoluteValue / DAY, "день", "дня", "дней")}"
             }
-            else -> return "более года"
+            else -> return "более чем через год"
         }
 
 }
