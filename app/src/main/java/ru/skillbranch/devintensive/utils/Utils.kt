@@ -52,17 +52,43 @@ object Utils {
 
         //val (, lName) = parseFullName(payload)
 
-        val parts: List<String>? = payload?.trim()?.split(" ")
-
-        val fName = parts?.getOrNull(0)
-        var lName=""
-        if (parts?.count()?:0>1)
-            for (i in 1..parts?.count()!!-1)
-                lName+= parts?.getOrNull(i)+" "
-        lName=lName.trim()
+        //val parts = payload?.trim().split(" ")
+        //println("parts = $parts")
         var fOutName = ""
+        //if (parts != null)
+        /*for (item in parts){
+                print(item)*/
+        //if (item != null)
+        for (b in payload) {
+            when {
+                (b.toString() == " ") -> fOutName += divider
+                (b.isLowerCase()) ->
+                    fOutName += litMap.getOrElse(b.toLowerCase().toString(), { b.toString() })
+                else -> {
+                    var st = litMap.getOrElse(b.toLowerCase().toString(), { b.toString() })
+                    if (b.toString().length == st.length)
+                        fOutName += st.toUpperCase()
+                    else
+                        fOutName += st.replaceRange(0, 1, st[0].toString().toUpperCase())
+                }
+                //if (word!=parts.get(parts.lastIndex))
+
+            }
+        }
+
+        //}
+        if (fOutName[fOutName.lastIndex].toString() == divider)
+            fOutName = fOutName.dropLast(fOutName.lastIndex)
+
+        /*val fName = parts?.getOrNull(0)
+
+        if (parts?.count() ?: 0 > 1)
+            for (i in 1..parts?.count()!! - 1)
+                lName += parts?.getOrNull(i) + " "
+        lName = lName.trim()
+
         var lOutName = ""
-        var st=""
+        var st = ""
         //println(fName)
         //println(lName)
         if (fName != null)
@@ -100,7 +126,9 @@ object Utils {
             lOutName = lOutName.replaceRange(0, 1, lOutName[0].toString().toUpperCase())
         else
             lOutName=""*/
-        return (fOutName + divider + lOutName).trim()
+             + divider + lOutName
+            */
+        return (fOutName).trim()
     }
 
 

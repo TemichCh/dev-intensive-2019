@@ -19,10 +19,10 @@ fun Date.add(value: Int, units: TimeUnits): Date {
     var time = this.time
 
     time += when (units) {
-        TimeUnits.SECOND -> value * SECOND
-        TimeUnits.MINUTE -> value * MINUTE
-        TimeUnits.HOUR -> value * HOUR
-        TimeUnits.DAY -> value * DAY
+        TimeUnits.SECOND -> value.toLong() * SECOND
+        TimeUnits.MINUTE -> value.toLong() * MINUTE
+        TimeUnits.HOUR -> value.toLong() * HOUR
+        TimeUnits.DAY -> value.toLong() * DAY
     }
     this.time = time
     return this
@@ -40,7 +40,8 @@ fun Date.humanizeDiff(date: Date = Date()): String {
     val thisTime = date.time
     val anotherTime = this.time
     val t = thisTime - anotherTime
-   // println("$thisTime , $anotherTime, $t")
+    println("${date.format()} , ${this.format()}")
+    println("$thisTime , $anotherTime, $t")
     when (t) {
         in (0L* SECOND..1L*SECOND) -> return "только что"
         in (1L*SECOND..45L*SECOND) -> return "несколько секунд назад"
@@ -58,8 +59,10 @@ fun Date.humanizeDiff(date: Date = Date()): String {
             "часов"
         )} назад"
         in (22L * HOUR..26L * HOUR) -> return "день назад"
-        in (26L * HOUR..360L * DAY) -> return "${t / DAY} ${Utils.days_to_string(t / DAY, "день", "дня", "дней")} назад"
-        else -> return "более года"
+        in (26L * HOUR..360L * DAY) -> {
+            return "${t / DAY} ${Utils.days_to_string(t / DAY, "день", "дня", "дней")} назад"
+        }
+        else -> return "более года назад"
     }
 }
 
