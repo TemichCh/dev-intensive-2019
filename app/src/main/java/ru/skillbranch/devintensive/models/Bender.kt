@@ -29,16 +29,16 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
             else -> {
                 if (question.answers.contains(answer.toLowerCase())) {
                     question = question.nextQuestion()
-                    "Отлично - ты справился!\n ${question.question}" to status.color
+                    "Отлично - ты справился!\n${question.question}" to status.color
                     //это правильный ответ
                 } else {
                     val st = status
                     status = status.nextStatus()
                     if (st != Status.NORMAL && status == Status.NORMAL) {
                         question = Question.NAME
-                        "Это не правильный ответ.Давай все по новой\n${question.question}" to status.color
+                        "Это неправильный ответ.Давай все по новой\n${question.question}" to status.color
                     } else
-                        "Это не правильный ответ\n${question.question}" to status.color
+                        "Это неправильный ответ\n${question.question}" to status.color
                 }
             }
 
