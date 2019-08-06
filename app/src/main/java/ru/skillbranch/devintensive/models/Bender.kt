@@ -15,8 +15,9 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
 
     fun listenAnswer(answer: String): Pair<String, Triple<Int, Int, Int>> {
         return when  {
-            (question == Question.NAME && answer[0].isLowerCase()) -> "Имя должно начинаться с заглавной буквы\n${question.question}" to status.color
-            (question == Question.PROFESSION && answer[0].isUpperCase()) -> "Профессия должна начинаться со строчной буквы\n${question.question}" to status.color
+            //(answer.isNullOrEmpty())->"${question.question}" to status.color
+            (question == Question.NAME &&(answer.isNotEmpty() && answer[0].isLowerCase())) -> "Имя должно начинаться с заглавной буквы\n${question.question}" to status.color
+            (question == Question.PROFESSION && (answer.isNotEmpty() && answer[0].isUpperCase())) -> "Профессия должна начинаться со строчной буквы\n${question.question}" to status.color
             (question == Question.MATERIAL && answer.contains("\\d".toRegex())) ->"Материал не должен содержать цифр\n${question.question}" to status.color
             (question == Question.BDAY && !answer.isDigitsOnly())->"Год моего рождения должен содержать только цифры\n${question.question}" to status.color
             (question == Question.SERIAL && (answer.length != 7 || !answer.isDigitsOnly())) ->"Серийный номер содержит только цифры, и их 7\n${question.question}" to status.color
