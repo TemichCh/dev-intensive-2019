@@ -1,5 +1,7 @@
 package ru.skillbranch.devintensive.models
 
+import androidx.core.text.isDigitsOnly
+
 class Bender(var status: Status = Status.NORMAL, var question: Question = Question.NAME) {
 
     fun askQuestion(): String = when (question) {
@@ -16,8 +18,8 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
             (question == Question.NAME && answer[0].isLowerCase()) -> "Имя должно начинаться с заглавной буквы\n${question.question}" to status.color
             (question == Question.PROFESSION && answer[0].isUpperCase()) -> "Профессия должна начинаться со строчной буквы\n${question.question}" to status.color
             (question == Question.MATERIAL && answer.contains("\\d".toRegex())) ->"Материал не должен содержать цифр\n${question.question}" to status.color
-            (question == Question.BDAY && !answer.contains("\\d".toRegex())) ->"Год моего рождения должен содержать только цифры\n${question.question}" to status.color
-            (question == Question.SERIAL && (!answer.contains("\\d".toRegex()) || answer.length != 7)) ->"Серийный номер содержит только цифры, и их 7\n${question.question}" to status.color
+            (question == Question.BDAY && !answer.isDigitsOnly())->"Год моего рождения должен содержать только цифры\n${question.question}" to status.color
+            (question == Question.SERIAL && (answer.length != 7 || !answer.isDigitsOnly())) ->"Серийный номер содержит только цифры, и их 7\n${question.question}" to status.color
             else -> {
                 if (question.answers.contains(answer.toLowerCase())) {
                     question = question.nextQuestion()
@@ -25,7 +27,8 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
                     //это правильный ответ
                 } else {
                     val st = status
-                    status = status.nextStatus()
+                    if (question!=Question.IDLE)
+                        status = status.nextStatus()
                     if (st != Status.NORMAL && status == Status.NORMAL) {
                         question = Question.NAME
                         "Это неправильный ответ. Давай все по новой\n${question.question}" to status.color
