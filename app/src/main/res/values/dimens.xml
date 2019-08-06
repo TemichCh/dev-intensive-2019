@@ -11,4 +11,11 @@
     <dimen name="spacing_normal_16">16dp</dimen>
     <dimen name="spacing_small_8">8dp</dimen>
     <dimen name="spacing_tiny_4">4dp</dimen>
+
+    <!-- button sizes -->
+    <dimen name="image_button_size_32">32dp</dimen>
+    <dimen name="image_button_size_24">24dp</dimen>
+    <dimen name="image_button_size_16">16dp</dimen>
+    <dimen name="image_button_size_8">8dp</dimen>
+    <dimen name="image_button_size_4">4dp</dimen>
 </resources>
