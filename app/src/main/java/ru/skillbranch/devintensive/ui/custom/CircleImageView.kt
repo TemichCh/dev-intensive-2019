@@ -9,9 +9,9 @@ import android.util.AttributeSet
 import android.util.Log
 import android.widget.ImageView
 import androidx.annotation.ColorRes
-import androidx.annotation.Dimension
 import androidx.core.graphics.toColorInt
 import ru.skillbranch.devintensive.R
+import androidx.annotation.Dimension as Dimension1
 
 
 /*
@@ -36,6 +36,7 @@ class CircleImageView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ImageView(context, attrs, defStyleAttr) {
     companion object {
+        private val SCALE_TYPE = ImageView.ScaleType.CENTER_CROP
         private const val DEFAULT_COLOR = Color.BLACK
         private const val DEFAULT_BORDER_COLOR = Color.WHITE
         private const val DEFAULT_BORDER_WIDTH = 2f
@@ -51,8 +52,14 @@ class CircleImageView @JvmOverloads constructor(
     private var cv_size = 0
     private var cv_bitmap: Bitmap? = null
     private val cv_ShaderMatrix = Matrix()
+    private var cv_bk_paint = Paint()
+    private var cv_mDrect = RectF()
+    private var mRectF = RectF()
+    private var cv_brd_paint = Paint()
+
 
     init {
+        super.setScaleType(SCALE_TYPE)
         if (attrs != null) {
             val a = context.obtainStyledAttributes(attrs, R.styleable.CircleImageView)
             cv_color = a.getColor(R.styleable.CircleImageView_cv_color, DEFAULT_COLOR)
@@ -76,46 +83,43 @@ class CircleImageView @JvmOverloads constructor(
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        Log.d("M_CircleImageView", "w=$measuredWidth+h=$measuredHeight")
+        /* Log.d("M_CircleImageView", "w=$measuredWidth+h=$measuredHeight")
         val new_cv_size = Math.max(measuredWidth, measuredHeight)
         cv_size = new_cv_size
         setMeasuredDimension(new_cv_size, new_cv_size)
-        Log.d("M_CircleImageView", "$new_cv_size")
+        Log.d("M_CircleImageView", "$new_cv_size")*/
     }
 
     private fun drawCircleBackground(canvas: Canvas) {
-        Log.d("M_CircleImageView", "draw $cv_size")
+        Log.d("M_CircleImageView", "draw $cv_size and brd_w=$cv_borderWidth")
 
-        val availableWidth = width - paddingLeft - paddingRight
-        val availableHeight = height - paddingTop - paddingBottom
+        val availableWidth = this.width - this.paddingLeft - this.paddingRight
+        val availableHeight = this.height - this.paddingTop - this.paddingBottom
 
         val sideLength = Math.min(availableWidth, availableHeight)
 
+        Log.d("M_CircleImageView", "pad_l=$availableWidth and pad_t=$sideLength")
         val mleft = paddingLeft + (availableWidth - sideLength) / 2f
         val mtop = paddingTop + (availableHeight - sideLength) / 2f
-
-        val mRectF = RectF(mleft, mtop, mleft + sideLength, mtop + sideLength)
-
+        Log.d("M_CircleImageView", "L-$mleft and T=$mtop")
 
 
 
-        if (cv_borderWidth > 0)
-            mRectF.inset(cv_borderWidth - 1.0f, cv_borderWidth - 1.0f)
-        val radius = Math.min(mRectF.height() / 2f, mRectF.width() / 2f)
+        mRectF = RectF(mleft, mtop, mleft + sideLength, mtop + sideLength)
 
         //sideLength/2f - cv_borderWidth
-        val bk_paint = Paint()
-        bk_paint.color = cv_color
-        bk_paint.isAntiAlias = true
+
+        cv_bk_paint.color = cv_color
+        cv_bk_paint.isAntiAlias = true
         if (cv_bitmap != null) {
             val mBitmapShader = BitmapShader(cv_bitmap!!, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
-            bk_paint.setShader(mBitmapShader) //shader = mBitmapShader
+            cv_bk_paint.setShader(mBitmapShader) //shader = mBitmapShader
 
             val scale: Float
             var dx = 0f
             var dy = 0f
 
-            cv_ShaderMatrix.set(null)
+            cv_ShaderMatrix.reset()//set(null)
 
             if (cv_bitmap!!.width * mRectF.height() > mRectF.width() * cv_bitmap!!.height) {
                 scale = mRectF.height() / cv_bitmap!!.width.toFloat()
@@ -125,34 +129,46 @@ class CircleImageView @JvmOverloads constructor(
                 dy = (mRectF.height() - cv_bitmap!!.height * scale) * 0.5f
             }
 
-            cv_ShaderMatrix.setScale(scale, scale)
-            cv_ShaderMatrix.postTranslate((dx + 0.5f).toInt() +  mRectF.left, (dy + 0.5f).toInt() +  mRectF.top)
+            Log.d("M_CircleImageView", "scale=$scale")
+            cv_ShaderMatrix.postScale(scale, scale)
+            Log.d("M_CircleImageView", "dx = ${dx} и dy=${dy}")
+            cv_ShaderMatrix.postTranslate(
+                cv_borderWidth, //(dx + 0.5f).toInt() + mRectF.left +
+                cv_borderWidth//(dy + 0.5f).toInt() + mRectF.top + cv_borderWidth
+            )
 
             mBitmapShader.setLocalMatrix(cv_ShaderMatrix)
 
         } else
-            bk_paint.style = Paint.Style.FILL //FILL_AND_STROKE
+            cv_bk_paint.style = Paint.Style.FILL //FILL_AND_STROKE
 
 
+        cv_mDrect.set(mRectF)
+        if (cv_borderWidth > 0)
+            cv_mDrect.inset(cv_borderWidth, cv_borderWidth) //  - 1.0f
+
+        var radius = Math.min(cv_mDrect.height() / 2f, cv_mDrect.width() / 2f)
 
         Log.d("M_CircleImageView", "$sideLength")
-        canvas.drawCircle(mRectF.centerX(), mRectF.centerY(), radius, bk_paint)
+        canvas.drawCircle(cv_mDrect.centerX(), cv_mDrect.centerY(), radius, cv_bk_paint)
         //canvas.drawBitmap(cv_bitmap,mRectF.left,mRectF.top,bk_paint)
 
         //canvas.drawBitmap()
-        val b_paint = Paint()
-        b_paint.color = cv_borderColor
-        b_paint.style=Paint.Style.STROKE
-        b_paint.isAntiAlias = true
-        b_paint.strokeWidth = getBorderWidth().toFloat()//cv_borderWidth
 
-        canvas.drawCircle(mRectF.centerX() , mRectF.centerY(), radius, b_paint) //cv_size / 2f
+        cv_brd_paint.color = cv_borderColor
+        cv_brd_paint.style = Paint.Style.STROKE
+        cv_brd_paint.isAntiAlias = true
+        cv_brd_paint.strokeWidth = getBorderWidth().toFloat()//cv_borderWidth
+
+        radius = Math.min((mRectF.height()) / 2f, (mRectF.width()) / 2f)
+
+        canvas.drawCircle(mRectF.centerX(), mRectF.centerY(), radius - cv_borderWidth, cv_brd_paint) //cv_size / 2f
 
     }
 
     fun getBorderWidth(): Int = cv_borderWidth.toInt()
 
-    fun setBorderWidth(@Dimension dp: Int) {
+    fun setBorderWidth(@Dimension1 dp: Int) {
         cv_borderWidth = dp.toFloat()
     }
 
@@ -181,6 +197,24 @@ class CircleImageView @JvmOverloads constructor(
         initializeBitmap()
     }
 
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+    }
+
+    override fun setPadding(left: Int, top: Int, right: Int, bottom: Int) {
+        super.setPadding(left, top, right, bottom)
+    }
+
+    override fun getScaleType(): ImageView.ScaleType {
+        return SCALE_TYPE
+    }
+
+    override fun setScaleType(scaleType: ImageView.ScaleType) {
+        if (scaleType != SCALE_TYPE) {
+            throw IllegalArgumentException(String.format("ScaleType %s not supported.", scaleType))
+        }
+    }
+
     private fun initializeBitmap() {
         cv_bitmap = getBitmapFromDrawable(drawable)
 
@@ -204,6 +238,8 @@ class CircleImageView @JvmOverloads constructor(
             else -> Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, BITMAP_CONFIG)
         }
     }
+
+
 
 
 }

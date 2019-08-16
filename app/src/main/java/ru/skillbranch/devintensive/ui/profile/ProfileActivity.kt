@@ -1,9 +1,12 @@
 package ru.skillbranch.devintensive.ui.profile
 
+import android.graphics.Bitmap
 import android.graphics.ColorFilter
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
+import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.util.Log
 import android.view.View
 import android.widget.EditText
@@ -14,6 +17,7 @@ import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_profile.*
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.Profile
+import ru.skillbranch.devintensive.utils.Utils
 import ru.skillbranch.devintensive.viewmodels.ProfileViewModel
 
 class ProfileActivity : AppCompatActivity() {
@@ -37,6 +41,7 @@ class ProfileActivity : AppCompatActivity() {
         initViewModel()
         initViews(savedInstanceState)
         Log.d("M_ProfileActivity","onCreate")
+
     }
 
 
@@ -91,6 +96,8 @@ class ProfileActivity : AppCompatActivity() {
         btn_switch_theme.setOnClickListener {
             viewModel.switchTheme()
         }
+
+
     }
 
     private fun showCurrentMode(isEdit: Boolean) {
