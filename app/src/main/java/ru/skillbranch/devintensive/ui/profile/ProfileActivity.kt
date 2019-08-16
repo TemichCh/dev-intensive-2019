@@ -44,7 +44,7 @@ class ProfileActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
 
         outState?.putBoolean(IS_EDITE_MODE, isEditMode)
-
+        Log.d("M_ProfileActivity","SaveInstance=$isEditMode")
     }
 
     private fun initViewModel() {
@@ -79,6 +79,8 @@ class ProfileActivity : AppCompatActivity() {
             "respect" to tv_respect
         )
         isEditMode = savedInstanceState?.getBoolean(IS_EDITE_MODE, false) ?: false
+        Log.d("M_ProfileActivity","initViews=$isEditMode")
+        showCurrentMode(isEditMode)
 
         btn_edit.setOnClickListener {
             if (isEditMode) saveProfileInfo()
@@ -134,6 +136,7 @@ class ProfileActivity : AppCompatActivity() {
             lastName = et_last_name.text.toString(),
             about = et_about.text.toString(),
             repository = et_repository.text.toString()
+            //editMode = isEdit
         ).apply {
             viewModel.saveProfileData(this)
         }
