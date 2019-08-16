@@ -2,6 +2,7 @@ package ru.skillbranch.devintensive.ui.custom
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.widget.ImageView
 import ru.skillbranch.devintensive.R
 import java.util.jar.Attributes
@@ -29,6 +30,7 @@ class AspectRatioImageView @JvmOverloads constructor(
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         val newHeight = (measuredWidth/aspectRatio).toInt()
         setMeasuredDimension(measuredWidth,newHeight)
+        Log.d("M_AspectRatioImageView","$newHeight")
 
     }
 }

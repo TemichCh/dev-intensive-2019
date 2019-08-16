@@ -1,8 +1,8 @@
 package ru.skillbranch.devintensive.models
 
+import ru.skillbranch.devintensive.utils.Utils.transliteration
+
 class Profile(
-
-
     val firstName: String,
     val lastName: String,
     val about: String,
@@ -10,8 +10,14 @@ class Profile(
     val rating: Int = 0,
     val respect: Int = 0
 ) {
-
-    val nickName: String = "John Doe" //TODO implement me
+/*
+* Реализуй Profile.nickName как вычисляемое свойство из имени и фамилии пользователя,
+* возвращающее значение псевдонима пользователя в виде транслитерированной строки с заменой пробела на "_"
+Пример:
+Profile: firsName = "Женя", lastName = "Стереотипов"; Profile.nickName //Zhenya_Stereotipov
+(Используй реализованный ранее метод Utils.transliteration)
+* */
+    val nickName: String = transliteration("$firstName $lastName","_")//"John Doe"
     val rank: String = "Junior Android Developer"
 
     fun toMap(): Map<String, Any> = mapOf(
