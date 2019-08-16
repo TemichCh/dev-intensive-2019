@@ -142,7 +142,7 @@ class CircleImageView @JvmOverloads constructor(
         //canvas.drawBitmap()
         val b_paint = Paint()
         b_paint.color = cv_borderColor
-        b_paint.style = Paint.Style.STROKE
+        b_paint.style=Paint.Style.STROKE
         b_paint.isAntiAlias = true
         b_paint.strokeWidth = getBorderWidth().toFloat()//cv_borderWidth
 
