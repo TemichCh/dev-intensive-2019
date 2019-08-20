@@ -161,7 +161,7 @@ class CircleImageView @JvmOverloads constructor(
         cv_brd_paint.color = cv_borderColor
         cv_brd_paint.style = Paint.Style.STROKE
         cv_brd_paint.isAntiAlias = true
-        cv_brd_paint.strokeWidth = getBorderWidth().toFloat()//cv_borderWidth
+        cv_brd_paint.strokeWidth = cv_borderWidth //getBorderWidth().toFloat()
 
         radius = Math.min((mRectF.height()) / 2f, (mRectF.width()) / 2f)
 
@@ -171,7 +171,7 @@ class CircleImageView @JvmOverloads constructor(
 
     fun getBorderWidth(): Int {
         val scale = resources.displayMetrics.density
-        return (cv_borderWidth*scale+0.5f).toInt()
+        return (cv_borderWidth/scale+0.5f).toInt()
     }
 
 
