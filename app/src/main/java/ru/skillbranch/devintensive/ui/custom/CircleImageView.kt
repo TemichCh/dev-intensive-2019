@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.Log
+import android.util.TypedValue
 import android.widget.ImageView
 import androidx.annotation.ColorRes
 import androidx.core.graphics.toColorInt
@@ -46,9 +47,11 @@ class CircleImageView @JvmOverloads constructor(
     }
 
     //private //Paint(Paint.ANTI_ALIAS_FLAG)
+    val scale = resources.displayMetrics.density
+
     private var cv_color = DEFAULT_COLOR
     private var cv_borderColor = DEFAULT_BORDER_COLOR
-    private var cv_borderWidth = DEFAULT_BORDER_WIDTH
+    private var cv_borderWidth = (2*scale+0.5f)//DEFAULT_BORDER_WIDTH
     private var cv_size = 0
     private var cv_bitmap: Bitmap? = null
     private val cv_ShaderMatrix = Matrix()
@@ -166,10 +169,15 @@ class CircleImageView @JvmOverloads constructor(
 
     }
 
-    fun getBorderWidth(): Int = cv_borderWidth.toInt()
+    fun getBorderWidth(): Int {
+        val scale = resources.displayMetrics.density
+        return (cv_borderWidth*scale+0.5f).toInt()
+    }
+
+
 
     fun setBorderWidth(@Dimension1 dp: Int) {
-        cv_borderWidth = dp.toFloat()
+        cv_borderWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,dp.toFloat(),resources.displayMetrics)
     }
 
     fun getBorderColor(): Int = cv_borderColor.toInt()
