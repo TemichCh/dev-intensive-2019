@@ -15,6 +15,18 @@ fun Date.format(pattern: String = "HH:mm:ss dd.MM.yy"): String {
     return dateFormat.format(this)
 }
 
+fun Date.shortFormat(): String {
+    val pattern = if (this.isSameDay(Date())) "HH:mm" else "dd.MM.yy"
+    val dateFormat = SimpleDateFormat(pattern, Locale("ru"))
+    return dateFormat.format(this)
+}
+
+fun Date.isSameDay(date: Date): Boolean {
+    val day1 = this.time / DAY
+    val day2 = date.time / DAY
+    return day1 == day2
+
+}
 
 fun Date.add(value: Int, units: TimeUnits): Date {
     var time = this.time
@@ -43,29 +55,29 @@ fun Date.humanizeDiff(date: Date = Date()): String {
     val t = thisTime - anotherTime
     println("${date.format()} , ${this.format()}")
     println("$thisTime , $anotherTime, $t")
-    if (t>0)
-    when (t) {
-        in (0L * SECOND..1L * SECOND) -> return "только что"
-        in (1L * SECOND..45L * SECOND) -> return "несколько секунд назад"
-        in (75L * SECOND..45L * MINUTE) -> return "${t / MINUTE} ${Utils.days_to_string(
-            t / MINUTE,
-            "минуту",
-            "минуты",
-            "минут"
-        )} назад"
-        in (45L * MINUTE..75L * MINUTE) -> return "час назад"
-        in (75L * MINUTE..22L * HOUR) -> return "${t / HOUR} ${Utils.days_to_string(
-            t / HOUR,
-            "час",
-            "часа",
-            "часов"
-        )} назад"
-        in (22L * HOUR..26L * HOUR) -> return "день назад"
-        in (26L * HOUR..360L * DAY) -> {
-            return "${t / DAY} ${Utils.days_to_string(t / DAY, "день", "дня", "дней")} назад"
+    if (t > 0)
+        when (t) {
+            in (0L * SECOND..1L * SECOND) -> return "только что"
+            in (1L * SECOND..45L * SECOND) -> return "несколько секунд назад"
+            in (75L * SECOND..45L * MINUTE) -> return "${t / MINUTE} ${Utils.days_to_string(
+                t / MINUTE,
+                "минуту",
+                "минуты",
+                "минут"
+            )} назад"
+            in (45L * MINUTE..75L * MINUTE) -> return "час назад"
+            in (75L * MINUTE..22L * HOUR) -> return "${t / HOUR} ${Utils.days_to_string(
+                t / HOUR,
+                "час",
+                "часа",
+                "часов"
+            )} назад"
+            in (22L * HOUR..26L * HOUR) -> return "день назад"
+            in (26L * HOUR..360L * DAY) -> {
+                return "${t / DAY} ${Utils.days_to_string(t / DAY, "день", "дня", "дней")} назад"
+            }
+            else -> return "более года назад"
         }
-        else -> return "более года назад"
-    }
     else
         when (t.absoluteValue) { /*1L * SECOND) -> return "только что"
             in (1L * SECOND..*/
@@ -85,7 +97,12 @@ fun Date.humanizeDiff(date: Date = Date()): String {
             )}"
             in (22L * HOUR..26L * HOUR) -> return "через день"
             in (26L * HOUR..360L * DAY) -> {
-                return "через ${t.absoluteValue / DAY} ${Utils.days_to_string(t.absoluteValue / DAY, "день", "дня", "дней")}"
+                return "через ${t.absoluteValue / DAY} ${Utils.days_to_string(
+                    t.absoluteValue / DAY,
+                    "день",
+                    "дня",
+                    "дней"
+                )}"
             }
             else -> return "более чем через год"
         }

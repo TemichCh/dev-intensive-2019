@@ -112,6 +112,9 @@ class ProfileActivity : AppCompatActivity() {
         ic_eye.visibility = if (isEdit) View.GONE else View.VISIBLE
         wr_about.isCounterEnabled = isEdit
 
+        var draw_txt = Utils.toInitials(et_first_name.toString(),et_last_name.toString())
+        iv_avatar.setText(draw_txt)
+
 
         with(btn_edit) {
             val filter: ColorFilter? = if (isEdit) {
