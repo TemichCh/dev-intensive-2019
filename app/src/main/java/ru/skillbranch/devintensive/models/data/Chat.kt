@@ -5,7 +5,7 @@ import ru.skillbranch.devintensive.models.BaseMessage
 import ru.skillbranch.devintensive.utils.Utils
 import java.util.*
 
-class Chat(
+data class Chat(
     val id: String,
     val title: String,
     val members: List<User> = listOf(),
@@ -24,45 +24,54 @@ class Chat(
         return null
     }
 
-    private fun lastMessageShort(): String {
+    private fun lastMessageShort(): Pair<String, String> {
         //TODO implement
-        return "Сообщений еще нет"
+        return "Сообщений еще нет" to "@John_Doe"
     }
 
     private fun isSingle(): Boolean = members.size == 1
     fun toChatItem(): ChatItem {
-       return if (isSingle()){
-            val user= members.first()
+        return if (isSingle()) {
+            val user = members.first()
             ChatItem(
                 id,
                 user.avatar,
-                Utils.toInitials(user.firstName,user.lastName)?:"??",
-                "${user.firstName?:""} ${user.lastName ?:""}",
-                lastMessageShort(),
+                Utils.toInitials(user.firstName, user.lastName) ?: "??",
+                "${user.firstName ?: ""} ${user.lastName ?: ""}",
+                lastMessageShort().first,
                 unreadableMessageCount(),
                 lastMessageDate()?.shortFormat(),
                 user.isOnline
 
             )
-        }else        {
+        } else {
             ChatItem(
                 id,
                 null,
                 "",
                 title,
-                lastMessageShort(),
+                lastMessageShort().first,
                 unreadableMessageCount(),
                 lastMessageDate()?.shortFormat(),
-                false
-            )
+                false,
+                ChatType.GROUP,
+                lastMessageShort().second
 
+            )
 
 
         }
 
     }
 
+
 }
 
+
+enum class ChatType {
+    SINGLE,
+    GROUP,
+    ARCHIVE
+}
 
 
