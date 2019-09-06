@@ -14,7 +14,6 @@ class MainViewModel : ViewModel() {
             .map { it.toChatItem() }
             .sortedBy { it.id.toInt() }
     }
-    //mutableLiveData(loadChats())
 
 
     fun getChatData(): LiveData<List<ChatItem>> {

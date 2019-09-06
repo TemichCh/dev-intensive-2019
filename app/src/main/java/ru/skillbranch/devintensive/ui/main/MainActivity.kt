@@ -2,8 +2,10 @@ package ru.skillbranch.devintensive.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -40,8 +42,12 @@ class MainActivity : AppCompatActivity() {
 
         val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         val touchCallback = ChatItemTouchHelperCallback(chatAdapter) {
+            val undo_item = it.id
             viewModel.addToArchive(it.id)
-            Snackbar.make(rv_chat_list, "Вы точно хотите добавить ${it.title} в архив?", Snackbar.LENGTH_LONG).show()
+            Log.d("M_MainActivity","Вы точно хотите добавить ${it.title} в архив?")
+            val sn_bar = Snackbar.make(rv_chat_list, "Вы точно хотите добавить ${it.title} в архив?", Snackbar.LENGTH_LONG)
+            sn_bar.setAction(R.string.snackbar_text, {viewModel.restoreFromArchive(undo_item)})
+            sn_bar.show()
         }
 
         val touchHelper = ItemTouchHelper(touchCallback)
@@ -54,6 +60,10 @@ class MainActivity : AppCompatActivity() {
             addItemDecoration(divider)
         }
 
+
+        fun undo(view:ViewModel){
+            view
+        }
 
 
         fab.setOnClickListener {

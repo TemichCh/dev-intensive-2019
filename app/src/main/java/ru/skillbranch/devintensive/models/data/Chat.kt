@@ -1,7 +1,9 @@
 package ru.skillbranch.devintensive.models.data
 
+import android.util.Log
 import ru.skillbranch.devintensive.extensions.shortFormat
 import ru.skillbranch.devintensive.models.BaseMessage
+import ru.skillbranch.devintensive.models.TextMessage
 import ru.skillbranch.devintensive.utils.Utils
 import java.util.*
 
@@ -15,21 +17,33 @@ data class Chat(
 
 ) {
     fun unreadableMessageCount(): Int {
-        //TODO implement
-        return 0
+        val count = messages.filter { (it.isReaded==false) }.count() ?: 0
+        Log.d("M_Chat","Непрочитанных сообщений = $count")
+        return count
     }
 
-    private fun lastMessageDate(): Date? {
-        //TODO implement
-        return null
+    fun lastMessageDate(): Date? {
+        val lastd = messages.maxBy { it.date }?.date
+        return lastd
     }
 
-    private fun lastMessageShort(): Pair<String, String> {
-        //TODO implement
-        return "Сообщений еще нет" to "@John_Doe"
+    fun lastMessageShort(): Pair<String, String> {
+        val lastm = messages.maxBy { it.date }
+        var text: String
+        var auth = ""
+        if (lastm != null) {
+            when {
+                lastm is TextMessage -> text = lastm.text ?: ""
+                else -> text = " ${lastm.from!!.firstName ?: "@John_Doe"} отправил фото"
+            }
+            auth = lastm.from!!.firstName ?: "@John_Doe"
+        } else text = "Сообщений еще нет"
+
+        return text to auth
     }
 
     private fun isSingle(): Boolean = members.size == 1
+
     fun toChatItem(): ChatItem {
         return if (isSingle()) {
             val user = members.first()
@@ -42,7 +56,6 @@ data class Chat(
                 unreadableMessageCount(),
                 lastMessageDate()?.shortFormat(),
                 user.isOnline
-
             )
         } else {
             ChatItem(
